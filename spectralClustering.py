@@ -26,8 +26,8 @@ def createGraph(dataset, k):
     # Forces symmetry in the graph
     graph = (graph + graph.T)
     # Print the graph
-    print "---Graph---"
-    print graph
+    #print "---Graph---"
+    #print graph
     return graph
     
 def computeGraphLaplacian(A):
@@ -35,23 +35,23 @@ def computeGraphLaplacian(A):
     D = np.diag(A.sum(axis=1))
     laplacian = D - A
     
-    print "---Graph Laplacian---"
-    print laplacian
+    #print "---Graph Laplacian---"
+    #print laplacian
     return laplacian
 
 # Returns the eigenvalues and eigenvectors for the laplacian matrix
 def findEigenValueVectors(laplacian):
     eigenvalues, eigenvectors = np.linalg.eig(laplacian)
-    print 
-    print "---EigenValues---"
-    print eigenvalues
-    print "---EigenVectors---"
-    print eigenvectors
+    #print 
+    #print "---EigenValues---"
+    #print eigenvalues
+    #print "---EigenVectors---"
+    #print eigenvectors
     return eigenvalues, eigenvectors
 
 def clusterEigenvectors(k, laplacian, maxIterations):
-    print
-    print "---Eigenvector Clustering---"
+    #print
+    #print "---Eigenvector Clustering---"
         
     # Call kmeans to cluster the resulting eigenvectors
     clusters = kmeans(k, laplacian, maxIterations)
@@ -91,7 +91,7 @@ def main(filename):
     clusterings = clusterEigenvectors(k, eigenvectors, 100)
     
     # Report purity statistics
-    if k > len(np.unique(groundTruth)):
+    if k != len(np.unique(groundTruth)):
         print "Not reporting purity statistics because k selected > clusters in ground truth"
     else:
         cleanedSet = postProcessing(groundTruth, clusterings)

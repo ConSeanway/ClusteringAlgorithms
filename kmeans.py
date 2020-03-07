@@ -77,10 +77,24 @@ def kmeans(k, dataset, maxIterations):
     reportSumSquaredError(dataset, cluster, cluster_centers)
     
     # Print out the results, after reporting the sum squared error
-    print "After " +  str(i) + " iterations, the clusters are: ", cluster_centers
-    print "Clustering Assignment after K-means: ", cluster
+    #print "After " +  str(i) + " iterations, the clusters are: ", cluster_centers
+    #print "Clustering Assignment after K-means: ", cluster
     print
     return cluster
+
+# This method just reassigns the clusters, based upon its proximity to each given data point
+def changeClusterAssignment(dataset, cluster, cluster_centers):
+    # For each point in the dataset...
+    for point in range(0,len(dataset)):
+            min_dist = float("inf")
+            # For each cluster...
+            for clust in range(0,len(cluster_centers)):
+                # Find the minimum distance between this cluster and each data point.  Assign the data point to the
+                # cluster it is closest to
+                dist = findEuclideanDistance(dataset[point],cluster_centers[clust])
+                if (dist < min_dist):
+                    cluster[point] = clust
+                    min_dist = dist
 
 # Update each cluster's position based upon their proximity to the cluster centers.  This is done after clusters are reassigned
 def updateClusterPosition(dataset, cluster, cluster_centers):
@@ -109,20 +123,6 @@ def updateClusterPosition(dataset, cluster, cluster_centers):
             # Assign the new cluster centers
             cluster_centers[k] = new_center
         return False
-
-# This method just reassigns the clusters, based upon its proximity to each given data point
-def changeClusterAssignment(dataset, cluster, cluster_centers):
-    # For each point in the dataset...
-    for point in range(0,len(dataset)):
-            min_dist = float("inf")
-            # For each cluster...
-            for clust in range(0,len(cluster_centers)):
-                # Find the minimum distance between this cluster and each data point.  Assign the data point to the
-                # cluster it is closest to
-                dist = findEuclideanDistance(dataset[point],cluster_centers[clust])
-                if (dist < min_dist):
-                    cluster[point] = clust
-                    min_dist = dist
                
 # Report the sum squared error for kmeans     
 def reportSumSquaredError(dataset, cluster, cluster_centers):
@@ -235,8 +235,8 @@ def main(filename):
     kResult = kmeans(k,trainData, maximumIterations)
     
     # Report purity statistics after running the dataset through postProcessing
-    if k > len(np.unique(groundTruth)):
-        print "Not reporting purity statistics because k selected > clusters in ground truth"
+    if k != len(np.unique(groundTruth)):
+        print "Not reporting purity statistics because k selected is different from the clusters found in ground truth"
     else:
         cleanedSet = postProcessing(groundTruth, kResult)
         findPuritySet(cleanedSet, k)
