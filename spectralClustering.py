@@ -24,7 +24,7 @@ def createGraph(dataset, k):
     # Find the KNN graph for each 
     graph = nb.kneighbors_graph(dataset, n_neighbors=k, metric='euclidean').toarray()
     # Forces symmetry in the graph
-    graph = (graph + graph.T)
+    graph = 0.5*(graph + graph.T)
     # Print the graph
     #print "---Graph---"
     #print graph
